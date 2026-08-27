@@ -1,8 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Your Wishlist</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -28,53 +32,225 @@
       color: cyan;
       text-shadow: 0 0 10px cyan;
     }
+
+    /* Disable zoom-style hover effect on touch devices */
+    @media (hover: none) {
+      .card:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
   </style>
 </head>
 
-<body class="p-10">
-         <!-- 🔙 TOP NAV -->
-<div class="flex justify-between items-center mb-6">
+<body class="min-h-screen px-4 py-6 sm:px-6 sm:py-8 md:px-10 md:py-10 overflow-x-hidden">
 
-  <!-- Home Button -->
-  <a href="{% url 'home' %}" 
-     class="px-5 py-2 rounded-lg font-semibold border border-cyan-400 text-cyan-300 hover:bg-cyan-400 hover:text-black transition shadow-lg hover:shadow-cyan-500/50">
-     ⬅ Home
-  </a>
+  <!-- 🔙 TOP NAV -->
+  <div class="mb-6 sm:mb-8">
 
-</div>
+    <a
+      href="{% url 'home' %}"
+      class="inline-flex
+             items-center
+             gap-2
+             px-4 sm:px-5
+             py-2
+             rounded-lg
+             font-semibold
+             border border-cyan-400
+             text-cyan-300
+             hover:bg-cyan-400
+             hover:text-black
+             transition
+             shadow-lg
+             hover:shadow-cyan-500/50
+             text-sm sm:text-base"
+    >
+      ⬅ Home
+    </a>
 
-  <h1 class="text-4xl font-bold neon-text mb-8">❤️ Your Wishlist</h1>
+  </div>
 
+
+  <!-- PAGE HEADER -->
+  <div class="mb-7 sm:mb-10">
+
+    <h1
+      class="text-3xl
+             sm:text-4xl
+             md:text-5xl
+             font-bold
+             neon-text
+             leading-tight"
+    >
+      ❤️ Your Wishlist
+    </h1>
+
+    <p class="text-gray-400 mt-2 text-sm sm:text-base">
+      Your favorite movies, all in one place.
+    </p>
+
+  </div>
+
+
+  <!-- WISHLIST -->
   {% if items %}
-  <div class="grid md:grid-cols-4 gap-6">
+
+  <div
+    class="grid
+           grid-cols-2
+           sm:grid-cols-2
+           md:grid-cols-3
+           lg:grid-cols-4
+           xl:grid-cols-5
+           gap-4
+           sm:gap-5
+           md:gap-6"
+  >
 
     {% for item in items %}
-    <div class="card rounded-xl p-4">
 
-      <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
-           class="rounded-lg mb-3">
+    <div
+      class="card
+             rounded-xl
+             p-3
+             sm:p-4
+             overflow-hidden"
+    >
 
-      <h2 class="font-semibold text-lg">{{ item.title }}</h2>
+      <!-- POSTER -->
+      <img
+        src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+        class="w-full
+               aspect-[2/3]
+               object-cover
+               rounded-lg
+               mb-3"
+        loading="lazy"
+        alt="{{ item.title }}"
+      >
 
-      <!-- Remove Button -->
-      <form method="POST" action="{% url 'toggle_wishlist' item.movie_id %}">
+
+      <!-- MOVIE TITLE -->
+      <h2
+        class="font-semibold
+               text-sm
+               sm:text-base
+               md:text-lg
+               line-clamp-2
+               min-h-[40px]
+               sm:min-h-[48px]"
+      >
+        {{ item.title }}
+      </h2>
+
+
+      <!-- REMOVE BUTTON -->
+      <form
+        method="POST"
+        action="{% url 'toggle_wishlist' item.movie_id %}"
+      >
+
         {% csrf_token %}
-        <input type="hidden" name="title" value="{{ item.title }}">
-        <input type="hidden" name="poster" value="{{ item.poster_path }}">
 
-        <button class="mt-3 w-full bg-red-500 hover:bg-red-600 px-3 py-2 rounded">
-          Remove
+        <input
+          type="hidden"
+          name="title"
+          value="{{ item.title }}"
+        >
+
+        <input
+          type="hidden"
+          name="poster"
+          value="{{ item.poster_path }}"
+        >
+
+        <button
+          type="submit"
+          class="mt-3
+                 w-full
+                 bg-red-500
+                 hover:bg-red-600
+                 active:scale-95
+                 px-3
+                 py-2.5
+                 rounded-lg
+                 text-sm
+                 font-semibold
+                 transition"
+        >
+          🗑 Remove
         </button>
+
       </form>
 
     </div>
+
     {% endfor %}
 
   </div>
 
+
   {% else %}
-  <p class="text-gray-400">No movies in wishlist 😢</p>
+
+  <!-- EMPTY WISHLIST -->
+  <div
+    class="max-w-xl
+           mx-auto
+           text-center
+           mt-12
+           sm:mt-16
+           px-5
+           py-10
+           sm:py-12
+           rounded-2xl
+           border
+           border-cyan-400/20
+           bg-white/[0.03]
+           backdrop-blur-md"
+  >
+
+    <div class="text-5xl sm:text-6xl mb-4">
+      😢
+    </div>
+
+    <h2
+      class="text-xl
+             sm:text-2xl
+             font-semibold
+             text-white
+             mb-2"
+    >
+      Your wishlist is empty
+    </h2>
+
+    <p class="text-gray-400 text-sm sm:text-base mb-6">
+      Add movies you love and they will appear here.
+    </p>
+
+    <a
+      href="{% url 'home' %}"
+      class="inline-flex
+             items-center
+             gap-2
+             bg-gradient-to-r
+             from-cyan-500
+             to-green-400
+             text-black
+             px-5
+             py-2.5
+             rounded-lg
+             font-semibold
+             hover:scale-105
+             transition"
+    >
+      🎬 Browse Movies
+    </a>
+
+  </div>
+
   {% endif %}
 
 </body>
 </html>
+
