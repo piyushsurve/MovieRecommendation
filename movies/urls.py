@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    path('movies/', home, name='home'),
+    path('', home, name='home'),
     path('api/<str:category>/', get_movies, name='get_movies'),
     path('movies/<int:id>',MovieDetail,name='movie_info'),
      path('recommend/', recommend_view, name='recommend'),
