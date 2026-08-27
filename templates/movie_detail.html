@@ -1,235 +1,756 @@
+```html id="q7m3kn"
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>{{ Data.title }}</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=DM+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
+
   <style>
     body {
       font-family: 'DM Sans', sans-serif;
       background: linear-gradient(135deg, #0a0f1c 0%, #05070d 100%);
       color: white;
     }
+
     .neon-text {
       background: linear-gradient(90deg, #00f5d4, #00bbf9);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 10px rgba(0,255,200,0.8), 0 0 20px rgba(0,200,255,0.6);
+      text-shadow:
+        0 0 10px rgba(0,255,200,0.8),
+        0 0 20px rgba(0,200,255,0.6);
     }
+
     .neon-btn {
       background: linear-gradient(90deg, #00f5d4, #00bbf9);
       color: #fff;
-      text-shadow: 0 0 8px rgba(0,255,200,0.8), 0 0 16px rgba(0,200,255,0.6);
-      box-shadow: 0 0 12px rgba(0,255,200,0.6), 0 0 24px rgba(0,200,255,0.4);
+      text-shadow:
+        0 0 8px rgba(0,255,200,0.8),
+        0 0 16px rgba(0,200,255,0.6);
+      box-shadow:
+        0 0 12px rgba(0,255,200,0.6),
+        0 0 24px rgba(0,200,255,0.4);
     }
+
     .neon-btn:hover {
       filter: brightness(1.2);
     }
   </style>
 </head>
-<body class="min-h-screen px-6 py-10">
 
-  <div class="max-w-6xl mx-auto bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/10">
+<body class="min-h-screen px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 overflow-x-hidden">
 
-    <div class="max-w-6xl mx-auto bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/10">
+  <!-- MAIN CONTAINER -->
+  <div
+    class="max-w-6xl
+           mx-auto
+           bg-white/5
+           backdrop-blur-lg
+           rounded-2xl
+           shadow-2xl
+           p-4
+           sm:p-6
+           md:p-8
+           border
+           border-white/10"
+  >
 
-  <!-- 🔙 TOP NAV BUTTON -->
-  <div class="flex justify-between items-center mb-6">
-    
-    <!-- Home Button -->
-    <a href="{% url 'home' %}" 
-       class="neon-btn px-5 py-2 rounded-lg font-semibold transition">
-       ⬅ Home
-    </a>
+    <!-- 🔙 TOP NAV -->
+    <div
+      class="flex
+             flex-col
+             xs:flex-row
+             sm:flex-row
+             justify-between
+             items-stretch
+             sm:items-center
+             gap-3
+             mb-6"
+    >
 
-    <!-- Optional Wishlist Button -->
-    <a href="{% url 'wishlist' %}" 
-       class="neon-btn px-5 py-2 rounded-lg font-semibold transition">
-       ❤️ Wishlist
-    </a>
+      <!-- HOME -->
+      <a
+        href="{% url 'home' %}"
+        class="neon-btn
+               inline-flex
+               items-center
+               justify-center
+               px-5
+               py-2.5
+               rounded-lg
+               font-semibold
+               transition
+               text-sm
+               sm:text-base"
+      >
+        ⬅ Home
+      </a>
 
-  </div>
+      <!-- WISHLIST -->
+      <a
+        href="{% url 'wishlist' %}"
+        class="neon-btn
+               inline-flex
+               items-center
+               justify-center
+               px-5
+               py-2.5
+               rounded-lg
+               font-semibold
+               transition
+               text-sm
+               sm:text-base"
+      >
+        ❤️ Wishlist
+      </a>
 
-    <!-- Top Section: Poster + Details -->
-    <div class="grid md:grid-cols-3 gap-10">
-      
-      <!-- Poster -->
-      <div>
+    </div>
+
+
+    <!-- 🎬 MOVIE INFORMATION -->
+    <div
+      class="grid
+             grid-cols-1
+             md:grid-cols-3
+             gap-6
+             md:gap-10"
+    >
+
+      <!-- POSTER -->
+      <div class="w-full max-w-sm mx-auto md:max-w-none">
+
         {% if Data.poster_path %}
-        <img src="https://image.tmdb.org/t/p/w500{{ Data.poster_path }}" 
-             alt="{{ Data.title }}" 
-             class="rounded-xl shadow-xl w-full hover:scale-105 transition-transform duration-500 ease-in-out">
+
+        <img
+          src="https://image.tmdb.org/t/p/w500{{ Data.poster_path }}"
+          alt="{{ Data.title }}"
+          class="rounded-xl
+                 shadow-xl
+                 w-full
+                 aspect-[2/3]
+                 object-cover
+                 hover:scale-[1.02]
+                 transition-transform
+                 duration-500
+                 ease-in-out"
+        >
+
         {% else %}
-        <div class="bg-gray-800 rounded-xl h-[400px] flex items-center justify-center w-full">
-          <span class="text-gray-400">No Image</span>
+
+        <div
+          class="bg-gray-800
+                 rounded-xl
+                 aspect-[2/3]
+                 flex
+                 items-center
+                 justify-center
+                 w-full"
+        >
+          <span class="text-gray-400">
+            No Image
+          </span>
         </div>
+
         {% endif %}
+
       </div>
 
-      <!-- Details -->
-      <div class="md:col-span-2 flex flex-col gap-6">
-        <!-- Title -->
-        <h1 class="text-4xl md:text-5xl font-extrabold neon-text">{{ Data.title }}</h1>
 
-        <!-- Genres -->
-        <div class="flex flex-wrap gap-2">
-          <span class="font-semibold text-gray-300">Genres:</span>
+      <!-- DETAILS -->
+      <div
+        class="md:col-span-2
+               flex
+               flex-col
+               gap-5
+               md:gap-6"
+      >
+
+        <!-- TITLE -->
+        <h1
+          class="text-3xl
+                 sm:text-4xl
+                 md:text-5xl
+                 font-extrabold
+                 neon-text
+                 leading-tight"
+        >
+          {{ Data.title }}
+        </h1>
+
+
+        <!-- GENRES -->
+        <div class="flex flex-wrap items-center gap-2">
+
+          <span class="font-semibold text-gray-300 mr-1">
+            Genres:
+          </span>
+
           {% if Data.genres %}
+
             {% for genre in Data.genres %}
-            <span class="text-sm px-3 py-1 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 rounded-full shadow-md">{{ genre.name }}</span>
+
+            <span
+              class="text-xs
+                     sm:text-sm
+                     px-3
+                     py-1.5
+                     bg-gradient-to-r
+                     from-cyan-500/30
+                     to-blue-500/30
+                     rounded-full
+                     shadow-md"
+            >
+              {{ genre.name }}
+            </span>
+
             {% endfor %}
+
           {% else %}
-            <span class="text-gray-400">N/A</span>
+
+            <span class="text-gray-400">
+              N/A
+            </span>
+
           {% endif %}
+
         </div>
 
-        <!-- Origin & Media -->
-        <div class="flex flex-wrap gap-6 text-gray-300">
-          <div><span class="font-semibold">Origin:</span> {{ Data.origin_country|join:", " }}</div>
-          <div><span class="font-semibold">Media Type:</span> {{ Data.media_type|default:"Movie" }}</div>
-        </div>
 
-        <!-- Release & Runtime -->
-        <div class="flex flex-wrap gap-6 text-gray-300">
-          <div><span class="font-semibold">Release:</span> {{ Data.release_date }}</div>
+        <!-- ORIGIN & MEDIA -->
+        <div
+          class="flex
+                 flex-col
+                 sm:flex-row
+                 sm:flex-wrap
+                 gap-3
+                 sm:gap-6
+                 text-gray-300
+                 text-sm
+                 sm:text-base"
+        >
+
           <div>
-            <span class="font-semibold">Runtime:</span>
-            {% if Data.runtime_hours is not None %}
-              {{ Data.runtime_hours }}h {{ Data.runtime_minutes }}m
-            {% else %}
-              <span class="text-gray-400">N/A</span>
-            {% endif %}
+            <span class="font-semibold">Origin:</span>
+            {{ Data.origin_country|join:", " }}
           </div>
+
+          <div>
+            <span class="font-semibold">Media Type:</span>
+            {{ Data.media_type|default:"Movie" }}
+          </div>
+
         </div>
 
-        <!-- Overview -->
+
+        <!-- RELEASE & RUNTIME -->
+        <div
+          class="flex
+                 flex-col
+                 sm:flex-row
+                 sm:flex-wrap
+                 gap-3
+                 sm:gap-6
+                 text-gray-300
+                 text-sm
+                 sm:text-base"
+        >
+
+          <div>
+            <span class="font-semibold">Release:</span>
+            {{ Data.release_date }}
+          </div>
+
+          <div>
+
+            <span class="font-semibold">
+              Runtime:
+            </span>
+
+            {% if Data.runtime_hours is not None %}
+
+              {{ Data.runtime_hours }}h
+              {{ Data.runtime_minutes }}m
+
+            {% else %}
+
+              <span class="text-gray-400">
+                N/A
+              </span>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+
+        <!-- OVERVIEW -->
         <div>
-          <h2 class="text-xl font-semibold text-cyan-400 mb-2">Overview</h2>
-          <p class="text-gray-200 leading-relaxed">{{ Data.overview }}</p>
+
+          <h2
+            class="text-lg
+                   sm:text-xl
+                   font-semibold
+                   text-cyan-400
+                   mb-2"
+          >
+            Overview
+          </h2>
+
+          <p
+            class="text-gray-200
+                   text-sm
+                   sm:text-base
+                   leading-relaxed"
+          >
+            {{ Data.overview }}
+          </p>
+
         </div>
 
-        <!-- Tagline -->
+
+        <!-- TAGLINE -->
         {% if Data.tagline %}
-        <div class="italic text-gray-400 border-l-4 border-cyan-400 pl-4">
+
+        <div
+          class="italic
+                 text-gray-400
+                 border-l-4
+                 border-cyan-400
+                 pl-4
+                 text-sm
+                 sm:text-base"
+        >
           "{{ Data.tagline }}"
         </div>
+
         {% endif %}
 
-        <!-- Buttons directly below details -->
-        <div class="flex gap-4 mt-6">
-         <form method="POST" action="{% url 'add_to_wishlist' Data.id %}">
-  {% csrf_token %}
 
-  <input type="hidden" name="title" value="{{ Data.title }}">
-  <input type="hidden" name="poster" value="{{ Data.poster_path }}">
+        <!-- WISHLIST BUTTON -->
+        <div class="flex flex-col sm:flex-row gap-3 mt-2">
 
-  <button class="neon-btn px-6 py-3 rounded-lg font-semibold transition">
-    ❤️ Add to Wishlist
-  </button>
-</form>
-          
+          <form
+            method="POST"
+            action="{% url 'add_to_wishlist' Data.id %}"
+            class="w-full sm:w-auto"
+          >
+
+            {% csrf_token %}
+
+            <input
+              type="hidden"
+              name="title"
+              value="{{ Data.title }}"
+            >
+
+            <input
+              type="hidden"
+              name="poster"
+              value="{{ Data.poster_path }}"
+            >
+
+            <button
+              type="submit"
+              class="neon-btn
+                     w-full
+                     sm:w-auto
+                     px-6
+                     py-3
+                     rounded-lg
+                     font-semibold
+                     transition
+                     text-sm
+                     sm:text-base"
+            >
+              ❤️ Add to Wishlist
+            </button>
+
+          </form>
+
         </div>
+
       </div>
+
     </div>
 
-{% comment %} Trailer Section  {% endcomment %}
 
-{% if trailer_key %}
-<div class="mt-12">
-  <h2 class="text-xl font-semibold text-cyan-400 mb-4">Trailer</h2>
-  <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg border border-cyan-400">
-    <iframe src="https://www.youtube.com/embed/{{ trailer_key }}"
-            title="Trailer" frameborder="0" allowfullscreen
-            class="w-full h-full"></iframe>
-  </div>
-  <p class="text-gray-400 mt-2">
-    If video doesn't play, <a href="{{ trailer_url }}" target="_blank" class="text-cyan-400 underline">
-      Watch on YouTube
-    </a>
-  </p>
-</div>
-{% else %}
-<div class="mt-12">
-  <p class="text-gray-400">
-    Trailer not available to embed.
-    <a href="https://www.youtube.com/watch?v={{trailer_key }}+trailer"
-       target="_blank" class="text-cyan-400 underline">Watch on YouTube</a>
-  </p>
-</div>
-{% endif %}
+    <!-- 🎥 TRAILER -->
+    {% if trailer_key %}
 
-<div class="mt-12">
-  <h2 class="text-2xl font-bold text-cyan-400 mb-4">User Reviews</h2>
+    <div class="mt-10 sm:mt-12">
 
-  {% if user.is_authenticated %}
-  <form method="POST" action="{% url 'add_review' Data.id %}" class="mb-6">
-    {% csrf_token %}
+      <h2
+        class="text-xl
+               sm:text-2xl
+               font-semibold
+               text-cyan-400
+               mb-4"
+      >
+        Trailer
+      </h2>
 
-    <textarea name="content" placeholder="Write your review..."
-      class="w-full p-3 rounded-lg bg-black/40 border border-cyan-500/30 mb-3"></textarea>
+      <div
+        class="relative
+               w-full
+               aspect-video
+               rounded-xl
+               overflow-hidden
+               shadow-lg
+               border
+               border-cyan-400"
+      >
 
-    <select name="rating" class="p-2 rounded bg-black border border-cyan-500/30 mb-3">
-      <option value="">Rating</option>
-      <option value="5">⭐⭐⭐⭐⭐</option>
-      <option value="4">⭐⭐⭐⭐</option>
-      <option value="3">⭐⭐⭐</option>
-      <option value="2">⭐⭐</option>
-      <option value="1">⭐</option>
-    </select>
+        <iframe
+          src="https://www.youtube.com/embed/{{ trailer_key }}"
+          title="Trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          class="absolute
+                 inset-0
+                 w-full
+                 h-full"
+        ></iframe>
 
-    <button class="neon-btn px-6 py-2 rounded-lg">Submit Review</button>
-  </form>
-  {% else %}
-  <p class="text-red-400 mb-6">
-    Please <a href="{% url 'login' %}" class="underline">login</a> to add review.
-  </p>
-  {% endif %}
+      </div>
 
-  <!-- Reviews List -->
-  {% for review in reviews %}
-  <div class="bg-white/5 p-4 rounded-xl mb-4 border border-cyan-500/20">
+      <p
+        class="text-gray-400
+               mt-2
+               text-sm"
+      >
+        If video doesn't play,
 
-    <div class="flex justify-between items-center">
-      <h3 class="font-semibold text-green-400">{{ review.user.username }}</h3>
-      <span class="text-yellow-400">⭐ {{ review.rating }}</span>
+        <a
+          href="{{ trailer_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-cyan-400 underline"
+        >
+          Watch on YouTube
+        </a>
+      </p>
+
     </div>
 
-    <p class="text-gray-300 mt-2">{{ review.content }}</p>
+    {% else %}
 
-    <!-- COMMENTS -->
-    <div class="mt-4 pl-4 border-l border-gray-600">
-      {% for comment in review.comments.all %}
-      <div class="mb-2">
-        <span class="text-sm text-cyan-400">{{ comment.user.username }}:</span>
-        <span class="text-gray-300 text-sm">{{ comment.content }}</span>
-      </div>
-      {% endfor %}
+    <div class="mt-10 sm:mt-12">
 
-      <!-- Add Comment -->
+      <p class="text-gray-400 text-sm sm:text-base">
+
+        Trailer not available to embed.
+
+        <a
+          href="https://www.youtube.com/results?search_query={{ Data.title|urlencode }}+trailer"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-cyan-400 underline"
+        >
+          Watch on YouTube
+        </a>
+
+      </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ⭐ USER REVIEWS -->
+    <div class="mt-10 sm:mt-12">
+
+      <h2
+        class="text-xl
+               sm:text-2xl
+               font-bold
+               text-cyan-400
+               mb-4"
+      >
+        User Reviews
+      </h2>
+
+
+      <!-- ADD REVIEW -->
       {% if user.is_authenticated %}
-     <form method="POST" action="{% url 'add_comment' review.id %}" class="mt-2">
-  {% csrf_token %}
 
-  <input type="text" name="content" placeholder="Reply..."
-    class="w-full p-2 rounded bg-black border border-cyan-500/30 text-sm mb-2">
+      <form
+        method="POST"
+        action="{% url 'add_review' Data.id %}"
+        class="mb-6"
+      >
 
-  <button type="submit" class="neon-btn px-4 py-1 rounded text-sm">
-    Comment
-  </button>
-</form>
+        {% csrf_token %}
+
+        <textarea
+          name="content"
+          placeholder="Write your review..."
+          rows="4"
+          class="w-full
+                 p-3
+                 rounded-lg
+                 bg-black/40
+                 border
+                 border-cyan-500/30
+                 text-sm
+                 sm:text-base
+                 resize-y
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-cyan-400"
+        ></textarea>
+
+
+        <div
+          class="flex
+                 flex-col
+                 sm:flex-row
+                 sm:items-center
+                 gap-3
+                 mt-3"
+        >
+
+          <select
+            name="rating"
+            class="w-full
+                   sm:w-auto
+                   p-2.5
+                   rounded
+                   bg-black
+                   border
+                   border-cyan-500/30
+                   text-sm
+                   focus:outline-none
+                   focus:ring-2
+                   focus:ring-cyan-400"
+          >
+
+            <option value="">Rating</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+
+          </select>
+
+
+          <button
+            type="submit"
+            class="neon-btn
+                   w-full
+                   sm:w-auto
+                   px-6
+                   py-2.5
+                   rounded-lg
+                   text-sm
+                   font-semibold"
+          >
+            Submit Review
+          </button>
+
+        </div>
+
+      </form>
+
+      {% else %}
+
+      <p
+        class="text-red-400
+               mb-6
+               text-sm
+               sm:text-base"
+      >
+
+        Please
+        <a
+          href="{% url 'login' %}"
+          class="underline text-cyan-400"
+        >
+          login
+        </a>
+        to add review.
+
+      </p>
+
       {% endif %}
+
+
+      <!-- REVIEWS LIST -->
+      <div class="space-y-4">
+
+        {% for review in reviews %}
+
+        <div
+          class="bg-white/5
+                 p-4
+                 sm:p-5
+                 rounded-xl
+                 border
+                 border-cyan-500/20"
+        >
+
+          <!-- REVIEW HEADER -->
+          <div
+            class="flex
+                   flex-col
+                   xs:flex-row
+                   sm:flex-row
+                   sm:justify-between
+                   gap-2
+                   sm:items-center"
+          >
+
+            <h3
+              class="font-semibold
+                     text-green-400
+                     text-sm
+                     sm:text-base"
+            >
+              {{ review.user.username }}
+            </h3>
+
+            <span
+              class="text-yellow-400
+                     text-sm
+                     sm:text-base"
+            >
+              ⭐ {{ review.rating }}
+            </span>
+
+          </div>
+
+
+          <!-- REVIEW CONTENT -->
+          <p
+            class="text-gray-300
+                   mt-3
+                   text-sm
+                   sm:text-base
+                   leading-relaxed
+                   break-words"
+          >
+            {{ review.content }}
+          </p>
+
+
+          <!-- COMMENTS -->
+          <div
+            class="mt-4
+                   pl-3
+                   sm:pl-4
+                   border-l
+                   border-gray-600"
+          >
+
+            {% for comment in review.comments.all %}
+
+            <div class="mb-3">
+
+              <span
+                class="text-sm
+                       text-cyan-400
+                       font-medium"
+              >
+                {{ comment.user.username }}:
+              </span>
+
+              <span
+                class="text-gray-300
+                       text-sm
+                       break-words"
+              >
+                {{ comment.content }}
+              </span>
+
+            </div>
+
+            {% endfor %}
+
+
+            <!-- ADD COMMENT -->
+            {% if user.is_authenticated %}
+
+            <form
+              method="POST"
+              action="{% url 'add_comment' review.id %}"
+              class="mt-3"
+            >
+
+              {% csrf_token %}
+
+              <div
+                class="flex
+                       flex-col
+                       sm:flex-row
+                       gap-2"
+              >
+
+                <input
+                  type="text"
+                  name="content"
+                  placeholder="Reply..."
+                  class="w-full
+                         p-2.5
+                         rounded
+                         bg-black
+                         border
+                         border-cyan-500/30
+                         text-sm
+                         focus:outline-none
+                         focus:ring-2
+                         focus:ring-cyan-400"
+                >
+
+                <button
+                  type="submit"
+                  class="neon-btn
+                         w-full
+                         sm:w-auto
+                         px-4
+                         py-2
+                         rounded
+                         text-sm
+                         whitespace-nowrap"
+                >
+                  Comment
+                </button>
+
+              </div>
+
+            </form>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+        {% empty %}
+
+        <p class="text-gray-400 text-sm sm:text-base">
+          No reviews yet.
+        </p>
+
+        {% endfor %}
+
+      </div>
+
     </div>
 
   </div>
-  {% empty %}
-  <p class="text-gray-400">No reviews yet.</p>
-  {% endfor %}
-</div>
-
-  </div>
-
 
 </body>
 </html>
+```
