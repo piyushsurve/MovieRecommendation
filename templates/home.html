@@ -1,119 +1,253 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MovieAI</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-body { 
+body {
   background: radial-gradient(circle at top, #0a0f1c, #05070d);
-  font-family: 'DM Sans', sans-serif; 
+  font-family: 'DM Sans', sans-serif;
 }
-h1 { font-family: 'Poppins', sans-serif; }
-.scrollbar-hide::-webkit-scrollbar { display:none; }
-.movie-card { transition: transform 0.4s ease, box-shadow 0.4s ease; }
-.movie-card:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,255,200,0.3); }
-.neon-text { text-shadow: 0 0 10px rgba(0,255,200,0.7), 0 0 20px rgba(0,200,255,0.5); }
+
+h1 {
+  font-family: 'Poppins', sans-serif;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,255,200,0.3);
+}
+
+.neon-text {
+  text-shadow:
+    0 0 10px rgba(0,255,200,0.7),
+    0 0 20px rgba(0,200,255,0.5);
+}
 </style>
 </head>
 
-<body class="text-white">
-<!-- 🎬 HERO -->
- {% if trending_movies %}
-<section id="hero"
-class="relative bg-cover bg-center h-[90vh] md:h-screen flex items-center transition-all duration-1000"
-style="background-image: url('https://image.tmdb.org/t/p/original{{ trending_movies.0.backdrop_path }}');">
+<body class="text-white overflow-x-hidden">
+
+{% if trending_movies %}
+
+<!-- HERO -->
+<section
+  id="hero"
+  class="relative bg-cover bg-center min-h-[720px] h-[90vh] md:h-screen flex items-center transition-all duration-1000"
+  style="background-image: url('https://image.tmdb.org/t/p/original{{ trending_movies.0.backdrop_path }}');"
+>
 
   <!-- NAVBAR -->
-  <nav class="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-5">
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 to-transparent -z-10"></div>
+  <nav class="absolute top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-8 py-4 md:py-5">
 
-    <h1 class="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-green-400 bg-clip-text text-transparent">
-      ⚡ MovieAI
-    </h1>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/90 to-transparent -z-10"></div>
 
-    <div class="hidden md:flex space-x-8 text-sm text-gray-300">
-      <a href="#" class="hover:text-cyan-400 transition">Home</a>
-      <a href="#" class="hover:text-green-400 transition">Movies</a>
-      <a href="#" class="hover:text-cyan-400 transition">TV Shows</a>
-      <a href="#" class="hover:text-green-400 transition">My List</a>
-      <a href="{% url 'wishlist' %}" class="neon-btn px-4 py-2 rounded-lg">
-  ❤️ Wishlist
-</a>
+    <!-- Navbar Row -->
+    <div class="flex flex-wrap items-center justify-between gap-4">
+
+      <!-- LOGO -->
+      <h1 class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-green-400 bg-clip-text text-transparent">
+        ⚡ MovieAI
+      </h1>
+
+      <!-- DESKTOP NAVIGATION -->
+      <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 text-sm text-gray-300">
+        <a href="#" class="hover:text-cyan-400 transition">
+          Home
+        </a>
+
+        <a href="#" class="hover:text-green-400 transition">
+          Movies
+        </a>
+
+        <a href="#" class="hover:text-cyan-400 transition">
+          TV Shows
+        </a>
+
+        <a href="#" class="hover:text-green-400 transition">
+          My List
+        </a>
+
+        <a
+          href="{% url 'wishlist' %}"
+          class="px-4 py-2 rounded-lg bg-green-500/10 border border-green-400/30 hover:bg-green-500/20 transition"
+        >
+          ❤️ Wishlist
+        </a>
+      </div>
+
+      <!-- SEARCH -->
+      <form
+        method="POST"
+        action="{% url 'recommend' %}"
+        class="order-3 sm:order-none w-full sm:w-auto"
+      >
+        {% csrf_token %}
+
+        <input
+          type="text"
+          name="movie_name"
+          placeholder="Search..."
+          class="w-full sm:w-48 md:w-56
+                 bg-black/40 backdrop-blur-md
+                 border border-cyan-500/20
+                 px-4 py-2.5
+                 rounded-full
+                 text-sm
+                 focus:sm:w-64
+                 transition-all duration-300
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-cyan-400
+                 placeholder-gray-300"
+        >
+      </form>
+
+      <!-- AUTH BUTTONS -->
+      <div class="flex items-center gap-2 sm:gap-3">
+
+        {% if user.is_authenticated %}
+
+          <span class="hidden sm:block text-green-400 text-sm max-w-[120px] truncate">
+            Hi, {{ user.username }}
+          </span>
+
+          <a
+            href="{% url 'logout' %}"
+            class="bg-red-500 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:bg-red-600 transition"
+          >
+            Logout
+          </a>
+
+        {% else %}
+
+          <a
+            href="{% url 'login' %}"
+            class="bg-cyan-500 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:bg-cyan-600 transition"
+          >
+            Login
+          </a>
+
+          <a
+            href="{% url 'register' %}"
+            class="bg-green-500 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:bg-green-600 transition"
+          >
+            Register
+          </a>
+
+        {% endif %}
+
+      </div>
+
     </div>
-
-  <form method="POST" action="{% url 'recommend' %}" class="flex">
-  {% csrf_token %}
-  
-  <input type="text" name="movie_name" placeholder="Search..."
-    class="bg-black/40 backdrop-blur-md border border-cyan-500/20 
-    px-4 py-2 rounded-full text-sm w-48
-    focus:w-64 transition-all duration-300
-    focus:outline-none focus:ring-2 focus:ring-cyan-400
-    placeholder-gray-300">
-
-</form>
-
-
-<div class="flex items-center space-x-4">
-
-{% if user.is_authenticated %}
-    <span class="text-green-400 text-sm">Hi, {{ user.username }}</span>
-    
-    <a href="{% url 'logout' %}" 
-       class="bg-red-500 px-4 py-2 rounded-full text-sm hover:bg-red-600">
-       Logout
-    </a>
-
-{% else %}
-    <a href="{% url 'login' %}" 
-       class="bg-cyan-500 px-4 py-2 rounded-full text-sm hover:bg-cyan-600">
-       Login
-    </a>
-
-    <a href="{% url 'register' %}" 
-       class="bg-green-500 px-4 py-2 rounded-full text-sm hover:bg-green-600">
-       Register
-    </a>
-{% endif %}
-
-</div>
   </nav>
+
 
   <!-- LEFT DARK GRADIENT -->
   <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
 
-  <!-- CONTENT -->
-  <div class="relative z-10 max-w-2xl ml-10 mt-24">
-    <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight neon-text">
+  <!-- HERO CONTENT -->
+  <div
+    class="relative z-10
+           w-full
+           px-5 sm:px-8 md:px-10
+           pt-32 sm:pt-36 md:pt-24
+           max-w-3xl"
+  >
+
+    <h1
+      id="hero-title"
+      class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl
+             font-extrabold
+             mb-4
+             leading-tight
+             neon-text"
+    >
       {{ trending_movies.0.title }}
     </h1>
 
-    <div class="flex items-center space-x-4 mb-4 text-sm md:text-base">
-      <span id="hero-rating" class="bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full font-semibold">
+    <div
+      class="flex flex-wrap items-center
+             gap-2 sm:gap-4
+             mb-4
+             text-xs sm:text-sm md:text-base"
+    >
+
+      <span
+        id="hero-rating"
+        class="bg-cyan-500/20
+               text-cyan-400
+               px-3 py-1
+               rounded-full
+               font-semibold"
+      >
         ⭐ {{ trending_movies.0.vote_average }}
       </span>
-      <span id="hero-meta" class="text-gray-300">📅 {{ trending_movies.0.release_date }}</span>
-      <span class="text-green-400 font-medium">HD</span>
+
+      <span
+        id="hero-meta"
+        class="text-gray-300"
+      >
+        📅 {{ trending_movies.0.release_date }}
+      </span>
+
+      <span class="text-green-400 font-medium">
+        HD
+      </span>
+
     </div>
 
-    <p id="hero-overview" class="text-gray-300 text-sm md:text-lg leading-relaxed mb-6 max-w-xl">
+    <p
+      id="hero-overview"
+      class="text-gray-300
+             text-sm sm:text-base md:text-lg
+             leading-relaxed
+             mb-6
+             max-w-xl"
+    >
       {{ trending_movies.0.overview|truncatechars:180 }}
     </p>
 
-    <div class="flex items-center space-x-4">
-      <button id="play-btn" class="bg-gradient-to-r from-cyan-500 to-green-400 px-7 py-3 rounded-lg text-sm md:text-base font-semibold shadow-lg shadow-cyan-500/30">
+    <div class="flex items-center">
+      <button
+        id="play-btn"
+        class="bg-gradient-to-r
+               from-cyan-500
+               to-green-400
+               px-5 sm:px-7
+               py-3
+               rounded-lg
+               text-sm sm:text-base
+               font-semibold
+               shadow-lg
+               shadow-cyan-500/30
+               hover:scale-105
+               transition"
+      >
         ▶ Play Trailer
       </button>
-     
     </div>
-  </div>
-</section>
-{% endif %}
 
+  </div>
+
+</section>
+
+{% endif %}
 
 
 <!-- HERO SCRIPT -->
@@ -121,7 +255,7 @@ style="background-image: url('https://image.tmdb.org/t/p/original{{ trending_mov
 const movies = [
 {% for movie in trending_movies %}
 {
-  id: "{{ movie.id }}",  
+  id: "{{ movie.id }}",
   title: "{{ movie.title|escapejs }}",
   overview: "{{ movie.overview|truncatechars:150|escapejs }}",
   backdrop: "{{ movie.backdrop_path }}",
@@ -132,135 +266,330 @@ const movies = [
 ];
 
 let index = 0;
+
 const playBtn = document.getElementById("play-btn");
 
-function goToMovie(){
+function goToMovie() {
   const movie = movies[index === 0 ? movies.length - 1 : index - 1];
   window.location.href = `/movies/${movie.id}`;
 }
 
-playBtn.addEventListener("click", goToMovie);
-function updateHero(){
-  if(!movies.length) return;
+if (playBtn) {
+  playBtn.addEventListener("click", goToMovie);
+}
+
+function updateHero() {
+
+  if (!movies.length) return;
+
   const movie = movies[index];
+
   const hero = document.getElementById("hero");
   const title = document.getElementById("hero-title");
   const overview = document.getElementById("hero-overview");
   const rating = document.getElementById("hero-rating");
   const meta = document.getElementById("hero-meta");
 
-  playBtn.onclick = () => {
-  window.location.href = `/movies/${movie.id}`;
-};
+  if (!hero || !title || !overview || !rating || !meta || !playBtn) {
+    return;
+  }
 
+  playBtn.onclick = () => {
+    window.location.href = `/movies/${movie.id}`;
+  };
 
   hero.style.opacity = 0;
-  setTimeout(()=>{
-    hero.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${movie.backdrop}')`;
+
+  setTimeout(() => {
+
+    hero.style.backgroundImage =
+      `url('https://image.tmdb.org/t/p/original${movie.backdrop}')`;
+
     title.innerText = movie.title;
+
     overview.innerText = movie.overview;
-    rating.innerText = "⭐ " + movie.rating + " / 10";
-    meta.innerText = "Release: " + movie.date;
+
+    rating.innerText =
+      "⭐ " + movie.rating + " / 10";
+
+    meta.innerText =
+      "Release: " + movie.date;
+
     hero.style.opacity = 1;
-  },500);
+
+  }, 500);
+
   index = (index + 1) % movies.length;
 }
+
 setInterval(updateHero, 5000);
 </script>
 
 
+<!-- TRENDING -->
+<section class="px-4 sm:px-6 md:px-8 py-8 md:py-10">
 
-<!-- 🔥 TRENDING -->
-<section class="px-8 py-10">
-  <h2 class="text-2xl mb-4 font-bold neon-text">🔥 Trending</h2>
-  <div class="flex gap-6 overflow-x-auto scrollbar-hide">
+  <h2 class="text-xl sm:text-2xl mb-4 font-bold neon-text">
+    🔥 Trending
+  </h2>
+
+  <div
+    class="flex gap-4 sm:gap-5 md:gap-6
+           overflow-x-auto
+           scrollbar-hide
+           snap-x snap-mandatory
+           pb-4"
+  >
+
     {% for movie in trending_movies %}
+
       {% if movie.poster_path %}
-      <a href="{% url 'movie_info' movie.id %}">
-        <div class="min-w-[220px] movie-card bg-[#111] rounded-xl overflow-hidden">
-          <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-[300px] object-cover">
+
+      <a
+        href="{% url 'movie_info' movie.id %}"
+        class="min-w-[150px] sm:min-w-[180px] md:min-w-[220px] snap-start"
+      >
+
+        <div
+          class="movie-card
+                 bg-[#111]
+                 rounded-xl
+                 overflow-hidden
+                 h-full"
+        >
+
+          <img
+            src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+            class="w-full
+                   h-[220px]
+                   sm:h-[260px]
+                   md:h-[300px]
+                   object-cover"
+            loading="lazy"
+            alt="{{ movie.title }}"
+          >
+
           <div class="p-3">
-            <h3 class="text-sm truncate">{{ movie.title }}</h3>
-            <p class="text-xs text-gray-400">{{ movie.release_date }}</p>
+
+            <h3 class="text-sm truncate">
+              {{ movie.title }}
+            </h3>
+
+            <p class="text-xs text-gray-400 mt-1">
+              {{ movie.release_date }}
+            </p>
+
           </div>
+
         </div>
+
       </a>
+
       {% endif %}
+
     {% endfor %}
+
   </div>
+
 </section>
 
-<!-- 👻 HORROR -->
-<section class="px-8 py-10">
-  <h2 class="text-2xl mb-4 font-bold neon-text">👻 Horror</h2>
-  <div class="flex gap-6 overflow-x-auto scrollbar-hide">
+
+<!-- HORROR -->
+<section class="px-4 sm:px-6 md:px-8 py-8 md:py-10">
+
+  <h2 class="text-xl sm:text-2xl mb-4 font-bold neon-text">
+    👻 Horror
+  </h2>
+
+  <div
+    class="flex gap-4 sm:gap-5 md:gap-6
+           overflow-x-auto
+           scrollbar-hide
+           snap-x snap-mandatory
+           pb-4"
+  >
+
     {% for movie in horror_movies %}
+
       {% if movie.poster_path %}
-      <a href="{% url 'movie_info' movie.id %}">
-        <div class="min-w-[220px] movie-card bg-[#111] rounded-xl overflow-hidden">
-          <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-[300px] object-cover">
+
+      <a
+        href="{% url 'movie_info' movie.id %}"
+        class="min-w-[150px] sm:min-w-[180px] md:min-w-[220px] snap-start"
+      >
+
+        <div class="movie-card bg-[#111] rounded-xl overflow-hidden h-full">
+
+          <img
+            src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+            class="w-full
+                   h-[220px]
+                   sm:h-[260px]
+                   md:h-[300px]
+                   object-cover"
+            loading="lazy"
+            alt="{{ movie.title }}"
+          >
+
           <div class="p-3">
-            <h3 class="text-sm truncate">{{ movie.title }}</h3>
-            <p class="text-xs text-gray-400">{{ movie.release_date }}</p>
+
+            <h3 class="text-sm truncate">
+              {{ movie.title }}
+            </h3>
+
+            <p class="text-xs text-gray-400 mt-1">
+              {{ movie.release_date }}
+            </p>
+
           </div>
+
         </div>
+
       </a>
+
       {% endif %}
+
     {% endfor %}
+
   </div>
+
 </section>
 
-<!-- 💥 ACTION -->
-<section class="px-8 py-10">
-  <h2 class="text-2xl mb-4 font-bold neon-text">💥 Action</h2>
-  <div class="flex gap-6 overflow-x-auto scrollbar-hide">
+
+<!-- ACTION -->
+<section class="px-4 sm:px-6 md:px-8 py-8 md:py-10">
+
+  <h2 class="text-xl sm:text-2xl mb-4 font-bold neon-text">
+    💥 Action
+  </h2>
+
+  <div
+    class="flex gap-4 sm:gap-5 md:gap-6
+           overflow-x-auto
+           scrollbar-hide
+           snap-x snap-mandatory
+           pb-4"
+  >
+
     {% for movie in action_movies %}
+
       {% if movie.poster_path %}
-      <a href="{% url 'movie_info' movie.id %}">
-        <div class="min-w-[220px] movie-card bg-[#111] rounded-xl overflow-hidden">
-          <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-[300px] object-cover">
+
+      <a
+        href="{% url 'movie_info' movie.id %}"
+        class="min-w-[150px] sm:min-w-[180px] md:min-w-[220px] snap-start"
+      >
+
+        <div class="movie-card bg-[#111] rounded-xl overflow-hidden h-full">
+
+          <img
+            src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+            class="w-full
+                   h-[220px]
+                   sm:h-[260px]
+                   md:h-[300px]
+                   object-cover"
+            loading="lazy"
+            alt="{{ movie.title }}"
+          >
+
           <div class="p-3">
-            <h3 class="text-sm truncate">{{ movie.title }}</h3>
-            <p class="text-xs text-gray-400">{{ movie.release_date }}</p>
+
+            <h3 class="text-sm truncate">
+              {{ movie.title }}
+            </h3>
+
+            <p class="text-xs text-gray-400 mt-1">
+              {{ movie.release_date }}
+            </p>
+
           </div>
+
         </div>
+
       </a>
+
       {% endif %}
+
     {% endfor %}
+
   </div>
+
 </section>
 
 
+<!-- ADVENTURE -->
+<section class="px-4 sm:px-6 md:px-8 py-8 md:py-10">
 
+  <h2 class="text-xl sm:text-2xl mb-4 font-bold neon-text">
+    🧭 Adventure
+  </h2>
 
-<!-- 🧭 ADVENTURE -->
-<section class="px-8 py-10">
-  <h2 class="text-2xl mb-4 font-bold neon-text">🧭 Adventure</h2>
+  <div
+    class="flex gap-4 sm:gap-5 md:gap-6
+           overflow-x-auto
+           scrollbar-hide
+           snap-x snap-mandatory
+           pb-4"
+  >
 
-  <div class="flex gap-6 overflow-x-auto scrollbar-hide">
-  {% for movie in adventure_movies %}
-  <a href="{% url 'movie_info' movie.id %}">
-   
-    <div class="min-w-[220px] movie-card bg-[#111] rounded-xl overflow-hidden hover:scale-105 transition duration-300">
-      
-      <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path|default:'/placeholder.jpg' }}"
-           class="w-full h-[300px] object-cover">
+    {% for movie in adventure_movies %}
 
-      <div class="p-3">
-        <h3 class="text-sm font-semibold truncate">{{ movie.title }}</h3>
-        <p class="text-xs text-gray-400">{{ movie.release_date }}</p>
+    <a
+      href="{% url 'movie_info' movie.id %}"
+      class="min-w-[150px] sm:min-w-[180px] md:min-w-[220px] snap-start"
+    >
+
+      <div class="movie-card bg-[#111] rounded-xl overflow-hidden h-full">
+
+        <img
+          src="https://image.tmdb.org/t/p/w500{{ movie.poster_path|default:'/placeholder.jpg' }}"
+          class="w-full
+                 h-[220px]
+                 sm:h-[260px]
+                 md:h-[300px]
+                 object-cover"
+          loading="lazy"
+          alt="{{ movie.title }}"
+        >
+
+        <div class="p-3">
+
+          <h3 class="text-sm font-semibold truncate">
+            {{ movie.title }}
+          </h3>
+
+          <p class="text-xs text-gray-400 mt-1">
+            {{ movie.release_date }}
+          </p>
+
+        </div>
+
       </div>
 
-    </div>
-  </a>
-{% endfor %}
+    </a>
+
+    {% endfor %}
+
   </div>
+
 </section>
 
+
 <!-- FOOTER -->
-<footer class="text-center text-gray-500 py-8 border-t border-cyan-500/20">
+<footer
+  class="text-center
+         text-gray-500
+         text-xs sm:text-sm
+         px-4
+         py-8
+         border-t
+         border-cyan-500/20"
+>
   MovieAI ⚡ | Built with Django + TMDB API
 </footer>
 
+
 </body>
 </html>
+```
