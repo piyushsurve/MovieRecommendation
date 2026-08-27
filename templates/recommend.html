@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovieAI - Recommendations</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: black;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .movie-card {
+      transition: all 0.35s ease;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
+    }
+
+    .movie-overlay {
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .movie-card:hover .movie-overlay {
+      opacity: 1;
+    }
+
+    .neon-text {
+      background: linear-gradient(to right, #22d3ee, #4ade80);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+  </style>
+</head>
+
+<body class="text-white">
+
+<!-- 🔴 NAVBAR -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-5 bg-black/70 backdrop-blur-md">
+
+  <!-- LOGO -->
+  <h1 class="text-2xl font-extrabold neon-text">
+    ⚡ MovieAI
+  </h1>
+
+  <!-- LINKS -->
+  <div class="hidden md:flex space-x-8 text-sm text-gray-300">
+    <a href="/" class="hover:text-cyan-400 transition">Home</a>
+    <a href="#" class="hover:text-green-400 transition">Movies</a>
+    <a href="#" class="hover:text-cyan-400 transition">TV Shows</a>
+    <a href="#" class="hover:text-green-400 transition">My List</a>
+  </div>
+
+  <!-- 🔍 SEARCH -->
+  <form method="POST" class="flex items-center gap-2">
+    {% csrf_token %}
+    
+    <input type="text" name="movie_name" placeholder="Search movies..."
+      class="bg-black/40 backdrop-blur-md border border-cyan-500/20 
+      px-4 py-2 rounded-full text-sm w-48
+      focus:w-64 transition-all duration-300
+      focus:outline-none focus:ring-2 focus:ring-cyan-400
+      placeholder-gray-300">
+
+    <button type="submit"
+      class="bg-gradient-to-r from-cyan-500 to-green-400 
+      px-4 py-2 rounded-full text-sm font-semibold
+      hover:scale-105 transition">
+      Search
+    </button>
+
+  </form>
+
+</nav>
+
+<!-- SPACING -->
+<div class="pt-28"></div>
+
+<!-- 🎬 HEADER -->
+<div class="px-8 mb-6">
+  <h1 class="text-4xl font-bold neon-text">🎬 Movie Recommendations</h1>
+  <p class="text-gray-400 mt-2">Search your favorite movie and discover similar ones</p>
+</div>
+
+<!-- 🔥 RECOMMENDATIONS -->
+{% if recommendations %}
+<section class="px-8 py-6">
+  <h2 class="text-2xl mb-6 font-bold neon-text">🔥 Recommended for you</h2>
+
+  <div class="flex gap-6 overflow-x-auto scrollbar-hide">
+    
+    {% for movie in recommendations %}
+    <a href="{% url 'movie_info' movie.id %}">
+      <div class="min-w-[220px] movie-card relative rounded-2xl overflow-hidden bg-[#111]">
+        
+        <!-- POSTER -->
+        <img src="{{ movie.poster }}" 
+             class="w-full h-[320px] object-cover">
+
+        <!-- OVERLAY -->
+        <div class="movie-overlay absolute inset-0 bg-black/70 flex flex-col justify-end p-4">
+          
+          <h3 class="text-sm font-semibold text-white mb-2">
+            {{ movie.title }}
+          </h3>
+
+          <button class="bg-gradient-to-r from-cyan-500 to-green-400 
+                         text-xs px-3 py-1 rounded-full w-fit">
+            ▶ View
+          </button>
+
+        </div>
+
+      </div>
+    </a>
+    {% endfor %}
+
+  </div>
+</section>
+{% endif %}
+
+<!-- ❌ NO RESULT -->
+{% if recommendations == None or recommendations|length == 0 %}
+<div class="px-8 mt-10 text-gray-400">
+  <p>No recommendations found. Try another movie 👀</p>
+</div>
+{% endif %}
+
+</body>
+</html>
