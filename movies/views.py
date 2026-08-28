@@ -24,7 +24,7 @@ movies = pd.DataFrame(movies)
 
 
 
-API_KEY = os.environ.get("TMDB_API_KEY")
+API_KEY =  os.getenv("TMDB_API_KEY")
 
 
 def fetch_poster(movie_title):
