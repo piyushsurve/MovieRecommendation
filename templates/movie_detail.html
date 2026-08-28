@@ -410,17 +410,15 @@
                border-cyan-400"
       >
 
-        <iframe
-          src="https://www.youtube.com/embed/{{ trailer_key }}"
-          title="Trailer"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          class="absolute
-                 inset-0
-                 w-full
-                 h-full"
-        ></iframe>
+    <iframe
+    src="https://www.youtube-nocookie.com/embed/{{ trailer_key }}"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+    class="absolute inset-0 w-full h-full"
+></iframe>
 
       </div>
 
